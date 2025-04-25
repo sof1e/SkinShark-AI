@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\flutterapps\skinshark-ai\build\windows\x64\CMakeFiles\93ab8c5c63203c0b63291c761dd79f3f\flutter_windows.dll.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\flutterapps\skinshark-ai\build\windows\x64\CMakeFiles\ddf9c0803608c52a601a59fa80da7e32\flutter_assemble.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\flutterapps\skinshark-ai\windows\flutter\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\flutterapps\skinshark-ai\build\windows\x64\flutter\CMakeFiles\flutter_assemble" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{CDC84349-AEA2-305A-803D-C9A716630F50}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
