@@ -151,5 +151,8 @@ history_finetune = model.fit(
 
 # Зберігаємо модель
 
-model.save('C:/flutterapps/skinshark-ai/model/skin_disease_model.h5')
-print("Модель збережено!")
+model_dir = os.path.join(current_dir, '..', 'model')  
+os.makedirs(model_dir, exist_ok=True) 
+model_path = os.path.join(model_dir, 'skin_disease_model.h5')
+model.save(model_path)
+print("Model saved to:", model_path)
