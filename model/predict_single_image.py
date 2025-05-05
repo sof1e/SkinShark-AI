@@ -37,5 +37,5 @@ def predict_image(img_path):
 
 # Тестовий виклик
 if __name__ == "__main__":
-    img_path = os.path.join(current_dir, '..', 'test_images', 'test_image.jpg')
+    img_path = os.path.join(current_dir, '..', 'model', 'test_images', 'test_image_2.jpg')
     predict_image(img_path)

@@ -126,3 +126,11 @@ history_finetune = model.fit(
 model_path = os.path.join(model_dir, 'skin_model.h5')
 model.save(model_path)
 print("✅ Модель збережено до:", model_path)
+
+# Convert the model
+converter = tf.lite.TFLiteConverter.from_saved_model(model_path) # path to the SavedModel directory
+tflite_model = converter.convert()
+
+# Save the model.
+with open('model.tflite', 'wb') as f:
+  f.write(tflite_model)
