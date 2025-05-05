@@ -1,45 +1,41 @@
 import os
+import json
 import numpy as np
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
-from tensorflow.keras.applications.resnet50 import preprocess_input
-import pandas as pd
 
-# Шлях до зображення для тесту
+# Шляхи
 current_dir = os.path.dirname(os.path.abspath(__file__))
-img_path = os.path.join(current_dir, '..', 'test_images', 'test_image.jpg')
-
-# Перевірка наявності зображення
-if not os.path.exists(img_path):
-    print(f"Зображення не знайдено за шляхом: {img_path}")
-    exit()
+model_path = os.path.join(current_dir, '..', 'model', 'skin_model.h5')
+class_indices_path = os.path.join(current_dir, '..', 'model', 'class_indices.json')
 
 # Завантаження моделі
-model_path = os.path.join(current_dir, 'skin_disease_model.h5')
-if not os.path.exists(model_path):
-    print(f"Модель не знайдена за шляхом: {model_path}")
-    exit()
-
+print("✅ Завантаження моделі...")
 model = load_model(model_path)
-print("Модель завантажено.")
 
-# Завантаження метаданих для класів (щоб отримати назву по індексу)
-csv_path = os.path.join(current_dir, '..', 'ham10000', 'HAM10000_metadata.csv')
-df = pd.read_csv(csv_path)
-class_names = sorted(df['dx'].unique())  # список назв класів, відсортований за індексами
-print("Класи:", class_names)
+# Завантаження мапінгу класів
+with open(class_indices_path, 'r') as f:
+    class_to_idx = json.load(f)
 
-# Передобробка зображення
-img = image.load_img(img_path, target_size=(224, 224))
-x = image.img_to_array(img)
-x = np.expand_dims(x, axis=0)
-x = preprocess_input(x)
+idx_to_class = {int(v): k for k, v in class_to_idx.items()}
+print("✅ Класи:", list(idx_to_class.values()))
 
-# Прогноз
-preds = model.predict(x)
-predicted_class_index = np.argmax(preds[0])
-confidence = np.max(preds[0])
-predicted_class_name = class_names[predicted_class_index]
+def predict_image(img_path):
+    # Завантаження зображення
+    img = image.load_img(img_path, target_size=(224, 224))
+    img_array = image.img_to_array(img)
+    img_array = np.expand_dims(img_array, axis=0)
+    img_array = img_array / 255.0
 
-# Результат
-print(f"Прогноз: {predicted_class_name} (індекс: {predicted_class_index}) з довірою {confidence:.2f}")
+    # Прогноз
+    predictions = model.predict(img_array)
+    predicted_index = np.argmax(predictions[0])
+    predicted_class = idx_to_class[predicted_index]
+    confidence = predictions[0][predicted_index]
+
+    print(f"🔍 Прогноз: {predicted_class} (індекс: {predicted_index}) з довірою {confidence:.2f}")
+
+# Тестовий виклик
+if __name__ == "__main__":
+    img_path = os.path.join(current_dir, '..', 'test_images', 'test_image.jpg')
+    predict_image(img_path)
