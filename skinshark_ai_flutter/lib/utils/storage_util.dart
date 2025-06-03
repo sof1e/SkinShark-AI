@@ -2,15 +2,17 @@ import 'package:hive/hive.dart';
 
 class HistoryEntry {
   HistoryEntry({
+    String? id,
     required this.userId,
     required this.image,
     required this.diseaseName,
     required this.confidence,
     required this.recommendations,
     required this.date,
-  });
+  }) : id = id ?? DateTime.now().millisecondsSinceEpoch.toString();
 
   factory HistoryEntry.fromJson(Map<String, dynamic> json) => HistoryEntry(
+    id: json['id'] as String,
     userId: json['userId'] as String,
     image: json['image'] as String,
     diseaseName: json['diseaseName'] as String,
@@ -19,7 +21,7 @@ class HistoryEntry {
     date: DateTime.parse(json['date'] as String),
   );
 
-  final String id = DateTime.now().millisecondsSinceEpoch.toString();
+  final String id;
   final String userId;
   final String image;
   final String diseaseName;
@@ -65,12 +67,14 @@ class StorageUtil {
 
   static Future<void> removeElement(String userId, String elementId) async {
     final box = await Hive.openBox(_boxName);
-    final historyList =
-        box.get(userId, defaultValue: <Map<String, dynamic>>[]) as List;
-    var targetEntry = historyList.firstWhere(
-      (entry) => entry['id'] == elementId,
+    final historyList = box.get(userId, defaultValue: []) as List<dynamic>;
+
+    final index = historyList.indexWhere(
+      (element) => element['id'] == elementId,
     );
-    historyList.remove(targetEntry);
-    await box.put(userId, historyList);
+    if (index != -1) {
+      historyList.removeAt(index);
+      await box.put(userId, historyList);
+    } else {}
   }
 }

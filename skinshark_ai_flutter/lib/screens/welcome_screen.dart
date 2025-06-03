@@ -44,10 +44,7 @@ class WelcomeScreen extends StatelessWidget {
               const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => SkinHomeScreen()),
-                  );
+                  Navigator.pushNamed(context, '/getStarted');
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(

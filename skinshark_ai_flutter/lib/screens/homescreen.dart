@@ -1,6 +1,5 @@
 import 'package:intl/intl.dart';
 import 'package:skinshark_ai_fixed/main.dart';
-import 'package:skinshark_ai_fixed/utils/diagnose_labels.dart';
 import 'package:skinshark_ai_fixed/utils/imports.dart';
 import 'package:image/image.dart' as img;
 
@@ -16,13 +15,13 @@ class SkinHomeScreen extends StatefulWidget {
 }
 
 class _SkinHomeScreenState extends State<SkinHomeScreen> {
-  int _currentIndex = 0; // размер входного изображения для модели
+  int _currentIndex = 0; // Розмір вхідного зображення для моделі
 
   final List<Widget> _screens = [
     HomeScreen(),
     CameraScreen(),
     ProfileScreen(),
-    MenuScreen(),
+    EducationScreen(),
   ];
 
   void _onTabTapped(int index) {
@@ -96,8 +95,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   late Interpreter _interpreter;
-  final int inputSize = 224; // размер входного изображения для модели
-  final int numLabels = 7; // количество классов (замени на своё)
+  final int inputSize = 224;
+  final int numLabels = 7;
 
   Future<void> loadModel() async {
     _interpreter = await Interpreter.fromAsset('assets/model.tflite');
@@ -110,14 +109,14 @@ class _HomeScreenState extends State<HomeScreen> {
       throw Exception("Decoding failed for image: ${imageFile.path}");
     }
 
-    // Изменяем размер до 224x224
+    // Змінюємо розмір до 224x224
     final resizedImage = img.copyResize(
       decodedImage,
       width: inputSize,
       height: inputSize,
     );
 
-    // Создаём плоский список из RGB, нормализуем в 0..1
+    // Створюємо плоский список із RGB, нормалізуємо в 0..1
     List<double> input = [];
     for (int y = 0; y < inputSize; y++) {
       for (int x = 0; x < inputSize; x++) {
@@ -177,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
         _recommendations = getRecommendationFor(predictedLabel);
       });
     } catch (e) {
-      print("Ошибка при предсказании: $e");
+      print("Помилка при передбаченні: $e");
     }
   }
 
@@ -239,302 +238,88 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: backgroundColor,
-      width: double.infinity,
-      height: double.infinity,
-      child: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back, size: 28),
-                        onPressed: () => Navigator.pop(context),
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                        alignment: Alignment.center,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        _imageUploaded
-                            ? "Your Skin Analysis Results:"
-                            : "Your Personal Skin Analysis!",
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          textBaseline: TextBaseline.alphabetic,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-
-              Center(
-                child: Container(
-                  width:
-                      MediaQuery.of(context).size.width *
-                      0.9, // 90% of screen width
-                  padding: const EdgeInsets.all(16), // internal padding
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                  ), // external padding from corners
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.3),
-                        blurRadius: 6,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      _imageFile != null
-                          ? ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.file(
-                              _imageFile!,
-                              height: 240,
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                          : ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.asset(
-                              'assets/images/skinfront.jpg',
-                              height: 240,
-                            ),
-                          ),
-                      const SizedBox(height: 12),
-                      const Text(
-                        "Analyze your skin now!",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      ElevatedButton(
-                        onPressed: () => _navigateToCamera(context),
-                        child: Text(
-                          _imageUploaded
-                              ? "Photo Uploaded"
-                              : "Snap a photo or upload one",
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Skin Conditions Detected Section
-              if (_imageUploaded)
-                Container(
-                  width:
-                      MediaQuery.of(context).size.width *
-                      0.9, // 90% of screen width
-                  padding: const EdgeInsets.all(16), // internal padding
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                  ), // external padding from corners
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.3),
-                        blurRadius: 6,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Skin Conditions Detected:",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        "Condition: $_diseaseName",
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        "Confidence: ${(_confidence * 100).toStringAsFixed(2)}%",
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      const SizedBox(height: 8),
-                    ],
-                  ),
-                ),
-              const SizedBox(height: 10),
-              // Treatment and Preventive Plan Section with ExpansionTile
-              if (_imageUploaded)
-                Container(
-                  width:
-                      MediaQuery.of(context).size.width *
-                      0.9, // 90% of screen width
-                  padding: const EdgeInsets.all(16), // internal padding
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                  ), // external padding from corners
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.3),
-                        blurRadius: 6,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: ExpansionTile(
-                    leading: const Icon(
-                      Icons.medical_services,
-                      color: primaryColor,
-                    ),
-                    title: const Text(
-                      "Treatment and Preventive Plan:",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    children: [
-                      const SizedBox(height: 8),
-                      Text(
-                        _recommendations,
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                    ],
-                  ),
-                ),
-              const SizedBox(height: 10),
-              // Button to go back to HomeScreen and try again
-              if (_imageUploaded &&
-                  _diseaseName.isNotEmpty &&
-                  _confidence > 0.0 &&
-                  _recommendations.isNotEmpty)
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        // Reset state to allow new image capture
-                        _imageFile = null;
-                        _imageUploaded = false;
-                        _diseaseName = "";
-                        _confidence = 0.0;
-                        _recommendations = "";
-                      });
-                    },
-                    child: const Text("Try Again"),
-                  ),
-                ),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ProfileScreen(),
-                      ),
-                    );
-                  },
-                  child: const Text("Test your skin type"),
-                ),
-              ),
-              if (!_imageUploaded) ...[
-                const SizedBox(height: 24),
-                const Text(
-                  "Education: Common conditions",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-                const Text(
-                  "Learn about common skin conditions and how to treat them.\nThis section provides articles and resources to help you understand your skin better.\n",
-                  style: TextStyle(fontSize: 14),
-                ),
-                const SizedBox(height: 8),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      ArticleCard(
-                        title: "Guide to Skin Cancer",
-                        imageUrl:
-                            "https://miiskin.com/wp-content/uploads/2019/08/types-of-skin-cancer.jpg",
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const MenuScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                      ArticleCard(
-                        title: "How to Prevent Acne",
-                        imageUrl:
-                            "https://thenakedchemist.com/wp-content/uploads/2022/07/20_YWNuZQ-1024x932.jpg",
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const MenuScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                      ArticleCard(
-                        title: "Best Skincare Routines",
-                        imageUrl:
-                            "https://hips.hearstapps.com/hmg-prod/images/skincare-steps-677e840842f99.jpg?crop=1.00xw:0.750xh;0,0.0944xh&resize=1200:*",
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const MenuScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                      ArticleCard(
-                        title: "Understanding Eczema",
-                        imageUrl:
-                            "https://www.eczemaexposed.com/-/media/ems/conditions/dermatology/brands/dupi-unbranded/eczema/understanding-eczema/eczema-example-2.jpg",
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const MenuScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const HistoryList(),
-              ],
-            ],
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('SkinShark-AI'),
+        backgroundColor: backgroundColor,
+        shadowColor: secondaryColor,
+        titleTextStyle: const TextStyle(
+          fontSize: 24,
+          fontFamily: 'Roboto',
+          fontWeight: FontWeight.bold,
+          color: textColor,
         ),
       ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Center(
+              child: PhotoCard(
+                imageFile: _imageFile,
+                imageUploaded: _imageUploaded,
+                onPressed: () => _navigateToCamera(context),
+              ),
+            ),
+            const SizedBox(height: 16),
+            if (_imageUploaded)
+              SkinConditionResults(
+                diseaseName: _diseaseName,
+                confidence: _confidence,
+                recommendations: _recommendations,
+              ),
+            const SizedBox(height: 10),
+            if (_imageUploaded &&
+                _diseaseName.isNotEmpty &&
+                _confidence > 0.0 &&
+                _recommendations.isNotEmpty)
+              TryAgainButton(
+                onPressed: () {
+                  setState(() {
+                    _imageFile = null;
+                    _imageUploaded = false;
+                    _diseaseName = "";
+                    _confidence = 0.0;
+                    _recommendations = "";
+                  });
+                },
+              ),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ProfileScreen(),
+                    ),
+                  );
+                },
+                child: const Text("Test your skin type"),
+              ),
+            ),
+            if (!_imageUploaded) const EducationSection(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _styledCard({required Widget child}) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.9,
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            blurRadius: 6,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: child,
     );
   }
 }

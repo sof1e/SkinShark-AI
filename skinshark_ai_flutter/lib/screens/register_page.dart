@@ -109,14 +109,14 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        leading: Image.asset(
-          'assets/images/pore.png',
-          height: 40,
-          width: 40,
-          fit: BoxFit.cover,
+        title: const Text('SkinShark—AI'),
+        backgroundColor: backgroundColor,
+        titleTextStyle: const TextStyle(
+          fontSize: 24,
+          fontFamily: 'Roboto',
+          fontWeight: FontWeight.bold,
+          color: textColor,
         ),
-        title: const Text("SkinShark-AI"),
-        backgroundColor: primaryColor,
       ),
       body: Container(
         padding: const EdgeInsets.all(32),

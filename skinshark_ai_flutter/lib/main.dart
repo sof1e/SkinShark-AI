@@ -1,13 +1,21 @@
+import 'package:skinshark_ai_fixed/home.dart';
 import 'package:skinshark_ai_fixed/utils/imports.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const SkinSharkAIApp());
+
+  // Додано: уникнення дублювання ініціалізації
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
+
   final appDocumentDirectory = await getApplicationDocumentsDirectory();
   Hive.init(appDocumentDirectory.path);
+
+  runApp(const SkinSharkAIApp());
 }
 
 class SkinSharkAIApp extends StatelessWidget {
@@ -56,7 +64,9 @@ class SkinSharkAIApp extends StatelessWidget {
       ),
       routes: {
         '/login': (context) => RegisterPage(),
-        '/welcome': (context) => SkinHomeScreen(),
+        '/welcome': (context) => WelcomeScreen(),
+        '/getStarted': (context) => StartPage(),
+        '/home': (context) => SkinHomeScreen(),
       },
       home: const WidgetTree(),
       debugShowCheckedModeBanner: false,
