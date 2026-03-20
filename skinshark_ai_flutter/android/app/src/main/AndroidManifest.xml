@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="skinshark_ai_fixed"
+        android:label="skinshark_ai"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

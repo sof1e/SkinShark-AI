@@ -1,4 +1,4 @@
-package com.example.skinshark_ai_fixed
+package com.skinshark.skinshark_ai
 
 import io.flutter.embedding.android.FlutterActivity
 
