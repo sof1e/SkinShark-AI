@@ -50,3 +50,4 @@ skinshark-env/
 ham10000/
 /model/model_train.py
 /lid/firebase_options.dart
+/skinshark_ai_flutter/android/app/google-services.json
