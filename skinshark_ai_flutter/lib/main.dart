@@ -1,6 +1,5 @@
 import 'package:skinshark_ai_fixed/home.dart';
 import 'package:skinshark_ai_fixed/utils/imports.dart';
-import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

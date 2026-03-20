@@ -1,7 +1,5 @@
 import 'package:skinshark_ai_fixed/utils/imports.dart';
 import 'package:image/image.dart' as img;
-import 'package:intl/intl.dart';
-import 'package:skinshark_ai_fixed/utils/diagnose_labels.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class CameraScreen extends StatefulWidget {

@@ -49,3 +49,4 @@ skinshark-env/
 /skinshark-env.zip
 ham10000/
 /model/model_train.py
+/lid/firebase_options.dart

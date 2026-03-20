@@ -290,7 +290,7 @@ class EducationSection extends StatelessWidget {
                 ArticleCard(
                   title: "Understanding Eczema",
                   imageUrl:
-                      "https://www.eczemaexposed.com/-/media/ems/conditions/dermatology/brands/dupi-unbranded/eczema/understanding-eczema/eczema-example-2.jpg",
+                      "https://eczemahelp.ca/wp-content/uploads/2024/03/types-of-eczema.jpg",
                   onTap: () {
                     Navigator.push(
                       context,
