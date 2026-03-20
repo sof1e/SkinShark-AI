@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:skinshark_ai_fixed/main.dart';
 import 'package:skinshark_ai_fixed/utils/imports.dart';
 import 'package:image/image.dart' as img;
