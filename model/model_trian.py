@@ -28,7 +28,7 @@ torch.cuda.manual_seed(10)
 print(os.listdir('/kaggle/input/'))
 current_dir = os.path.dirname(os.path.abspath(__file__))
 model_dir = os.path.join(current_dir, '..', 'model')
-data_dir = os.path.join(current_dir, '..', 'ham10000')  # или './ham10000', если всё в текущей папке
+data_dir = os.path.join(current_dir, '..', 'ham10000')  
 csv_path = os.path.join(data_dir, 'HAM10000_metadata.csv')
 images_path_1 = os.path.join(data_dir, 'HAM10000_images_part_1')
 images_path_2 = os.path.join(data_dir, 'HAM10000_images_part_2')
